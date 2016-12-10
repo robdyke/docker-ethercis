@@ -39,7 +39,7 @@ export JOOQ_DB_PASSWORD=postgres
 
 CLASSPATH=./:\
 ${JAVA_HOME}/lib:\
-${LIB}/ecis-core-1.1.0-SNAPSHOT.jar:\
+${LIB}/ecis-core-1.1.1-SNAPSHOT.jar:\
 ${LIB}/ecis-knowledge-cache-1.1.0-SNAPSHOT.jar:\
 ${LIB}/ecis-ehrdao-1.1.0-SNAPSHOT.jar:\
 ${LIB}/jooq-pg-1.1.0-SNAPSHOT.jar:\

@@ -31,14 +31,14 @@ ECIS_MAILER=echo
 
 # use the right jvm library depending on the OS
 # NB: EtherCIS requires java 8
-if [ :${UNAME}: = :Linux: ];
-then
-  JAVA_HOME=/opt/jdk1.8.0_60/jre
-fi
-if [ :${UNAME}: = :SunOS: ];
-then
-  JAVA_HOME=/jdk1.8.0_60/jre
-fi
+#if [ :${UNAME}: = :Linux: ];
+#then
+#  JAVA_HOME=/opt/jdk1.8.0_60/jre
+#fi
+#if [ :${UNAME}: = :SunOS: ];
+#then
+#  JAVA_HOME=/jdk1.8.0_60/jre
+#fi
 
 #force to use IPv4 so Jetty can bind to it instead of IPv6...
 export _JAVA_OPTIONS="-Djava.net.preferIPv4Stack=true"
@@ -82,6 +82,7 @@ ${LIB}/ecis-system-service-1.1.0-SNAPSHOT.jar:\
 ${LIB}/ecis-ehr-service-1.1.0-SNAPSHOT.jar:\
 ${LIB}/ecis-vehr-service-1.1.0-SNAPSHOT.jar:\
 ${LIB}/ecis-query-service-1.0.0-SNAPSHOT.jar:\
+${LIB}/session-logger-service-1.0-SNAPSHOT.jar:\
 ${APPLIB}/ehrxml.jar:\
 ${APPLIB}/oet-parser.jar:\
 ${APPLIB}/ecis-openehr.jar:\
