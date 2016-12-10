@@ -2,6 +2,9 @@
 
 Docker environment for [EtherCIS] (https://github.com/ethercis/ethercis), an open source platform compatible with the openEHR standard.
 
+Forked to test use with current version of EtherCis (as of 10th December 2016).
+
+
 ## How To Use
 
 * EtherCIS uses a RESTful API similar to the [Ehrscape API] (https://code4health.org/platform/open_interfaces_apis/ehrscape/ehrscape_api_reference).
