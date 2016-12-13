@@ -82,7 +82,6 @@ ${LIB}/ecis-system-service-1.1.0-SNAPSHOT.jar:\
 ${LIB}/ecis-ehr-service-1.1.0-SNAPSHOT.jar:\
 ${LIB}/ecis-vehr-service-1.1.0-SNAPSHOT.jar:\
 ${LIB}/ecis-query-service-1.0.0-SNAPSHOT.jar:\
-${LIB}/session-logger-service-1.0-SNAPSHOT.jar:\
 ${APPLIB}/ehrxml.jar:\
 ${APPLIB}/oet-parser.jar:\
 ${APPLIB}/ecis-openehr.jar:\
@@ -106,17 +105,17 @@ case "$1" in
 	-cp ${CLASSPATH} \
 	-Xdebug \
 	-Xrunjdwp:transport=dt_socket,address=8000,suspend=n,server=y \
+        -Djava.rmi.server.hostname=${SERVER_HOST} \
+	-Dcom.sun.management.jmxremote.port=8999 \
+        -Dcom.sun.management.jmxremote.local.only=false \
+	-Dcom.sun.management.jmxremote.ssl=false \
+	-Dcom.sun.management.jmxremote.authenticate=false \
 	-Djava.util.logging.config.file=${RUNTIME_ETC}/logging.properties \
-	-Dlog4j.configuration=file:${RUNTIME_ETC}/log4j.xml \
+	-Dlog4j.configurationFile=file:${RUNTIME_ETC}/log4j.xml \
 	-Djava.net.preferIPv4Stack=true \
 	-Djava.awt.headless=true \
 	-Djdbc.drivers=org.postgresql.Driver \
     	-Dserver.node.name=vm01.ethercis.org \
-	-Dcom.sun.management.jmxremote \
-	-Dcom.sun.management.jmxremote.port=8999 \
-    	-Dcom.sun.management.jmxremote.local.only=false \
-	-Dcom.sun.management.jmxremote.ssl=false \
-	-Dcom.sun.management.jmxremote.authenticate=false \
     	-Dfile.encoding=UTF-8 \
     	-Djava.rmi.server.hostname=${SERVER_HOST} \
 	-Djooq.dialect=${JOOQ_DIALECT} \

@@ -24,10 +24,12 @@ RUN chown -R ethercis:ethercis /home/ethercis/logs \
 # Copy EtherCIS files into their corresponding directories
 COPY ./ethercis-1.1.1/conf /etc/opt/ecis
 COPY ./ethercis-1.1.1/bin /opt/ecis/bin
+
 COPY ./ethercis-1.1.1/lib/application /opt/ecis/lib/application
 COPY ./ethercis-1.1.1/lib/deploy /opt/ecis/lib/deploy
 COPY ./ethercis-1.1.1/lib/system /opt/ecis/lib/system
 COPY ./wait-for-it.sh /opt/ecis/bin/wait-for-it.sh
+COPY ./ethercis-1.1.1/bin/ecis-server.sh /opt/ecis/bin
 
 # Make startup scripts executable
 RUN chmod +x /opt/ecis/bin/populate-concept.sh && \

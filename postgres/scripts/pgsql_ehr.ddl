@@ -282,7 +282,7 @@ create table ehr.entry (
   template_id VARCHAR(250), -- operational template to rebuild the structure entry
   template_uuid UUID, -- optional, used with operational template for consistency
   archetype_id VARCHAR(250), -- ROOT archetype id (not sure still in use...)
-  category UUID null references ehr.concept(id), -- used to specify the type of content: Evaluation, Instruction, Observation, Action with different languages
+  category UUID null references ehr.concept(id) ON DELETE CASCADE, -- used to specify the type of content: Evaluation, Instruction, Observation, Action with different languages
   entry JSONB,            -- actual content version dependent (9.3: json, 9.4: jsonb). entry is either CARE_ENTRY or ADMIN_ENTRY
   sys_transaction TIMESTAMP NOT NULL,
   sys_period tstzrange NOT NULL -- temporal table
