@@ -2,7 +2,7 @@
 
 Docker environment for [EtherCIS] (https://github.com/ethercis/ethercis), an open source platform compatible with the openEHR standard.
 
-Forked to test use with current version of EtherCis (as of 10th December 2016).
+Forked to test use with current version of EtherCis (as of 23rd December 2016).
 
 
 ## How To Use
