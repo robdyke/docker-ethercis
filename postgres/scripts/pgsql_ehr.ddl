@@ -10,10 +10,10 @@
 --        drop constraint FKC199A3AA4204581F;
 -- Rev 1.1 2/8/16 CCH
 --
-drop schema if exists ehr cascade;
+DROP SCHEMA IF EXISTS ehr CASCADE;
 -- drop schema if exists common cascade;
 
-create schema ehr;
+CREATE SCHEMA ehr;
 
 CREATE EXTENSION IF NOT EXISTS "temporal_tables" WITH SCHEMA ehr;
 
@@ -69,7 +69,7 @@ CREATE TABLE ehr.concept (
 
 COMMENT ON TABLE  ehr.concept IS 'openEHR common concepts (e.g. terminology) used in the system';
 
-create table ehr.party_identified (
+CREATE TABLE ehr.party_identified (
 	id UUID primary key DEFAULT ehr.uuid_generate_v4(),
 	name varchar(50),
   -- optional party ref attributes
@@ -80,7 +80,7 @@ create table ehr.party_identified (
 );
 
 -- list of identifiers for a party identified
-create table ehr.identifier (
+CREATE TABLE ehr.identifier (
 	id_value VARCHAR(50), -- identifier value
 	issuer VARCHAR(50), -- authority responsible for the identification (ex. France ASIP, LDAP server etc.)
   assigner VARCHAR(50), -- assigner of the identifier
@@ -91,7 +91,7 @@ create table ehr.identifier (
 COMMENT ON TABLE ehr.identifier IS 'specifies an identifier for a party identified, more than one identifier is possible';
 
 -- defines the modality for accessing an com.ethercisrcis.ehr
-create table ehr.access (
+CREATE TABLE ehr.access (
 	id UUID PRIMARY KEY DEFAULT ehr.uuid_generate_v4(),
 	settings varchar(250),
 	scheme char(50) -- name of access control scheme
@@ -102,7 +102,7 @@ COMMENT ON TABLE ehr.access IS 'defines the modality for accessing an com.etherc
 
 -- storeComposition ehr_im entities
 -- EHR Class emr_im 4.7.1
-create table ehr.ehr (
+CREATE TABLE ehr.ehr (
     id UUID NOT NULL PRIMARY KEY DEFAULT ehr.uuid_generate_v4(),
     date_created timestamp default CURRENT_DATE,
     date_created_tzid VARCHAR(15), -- timezone id: GMT+/-hh:mm
@@ -113,7 +113,7 @@ create table ehr.ehr (
 );
 COMMENT ON TABLE ehr.ehr IS 'EHR itself';
 
-create table ehr.status (
+CREATE TABLE ehr.status (
   id UUID NOT NULL PRIMARY KEY DEFAULT ehr.uuid_generate_v4(),
   ehr_id UUID references ehr.ehr(id) ON DELETE CASCADE,
   is_queryable boolean default true,
@@ -125,7 +125,7 @@ create table ehr.status (
 );
 
 -- change history table
-create table ehr.status_history (like ehr.status);
+CREATE TABLE ehr.status_history (like ehr.status);
 CREATE INDEX ehr_status_history ON ehr.status_history USING BTREE (id);
 
 CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON ehr.status
@@ -148,14 +148,14 @@ COMMENT ON TABLE ehr.status IS 'specifies an ehr modality and ownership (patient
 -- );
 
 -- COMMENT ON TABLE ehr.versioned IS 'used to reference a versioning system';
-create type ehr.contribution_data_type as enum('composition', 'folder', 'ehr', 'system', 'other');
-create type ehr.contribution_state as enum('complete', 'incomplete', 'deleted');
-create type ehr.contribution_change_type as enum('creation', 'amendment', 'modification', 'synthesis', 'Unknown', 'deleted');
+CREATE TYPE ehr.contribution_data_type as enum('composition', 'folder', 'ehr', 'system', 'other');
+CREATE TYPE ehr.contribution_state as enum('complete', 'incomplete', 'deleted');
+CREATE TYPE ehr.contribution_change_type as enum('creation', 'amendment', 'modification', 'synthesis', 'Unknown', 'deleted');
 
 -- COMMON IM
 -- change control
 
-create table ehr.contribution (
+CREATE TABLE ehr.contribution (
 	id UUID primary key DEFAULT ehr.uuid_generate_v4(),
   ehr_id UUID references ehr.ehr(id) ON DELETE CASCADE ,
   contribution_type ehr.contribution_data_type, -- specifies the type of data it contains
@@ -171,7 +171,7 @@ create table ehr.contribution (
   sys_period tstzrange NOT NULL -- temporal table
 );
 
-create table ehr.attestation (
+CREATE TABLE ehr.attestation (
   id UUID PRIMARY KEY DEFAULT ehr.uuid_generate_v4(),
   contribution_id UUID REFERENCES ehr.contribution(id) ON DELETE CASCADE ,
   proof TEXT,
@@ -202,7 +202,7 @@ COMMENT ON TABLE ehr.contribution IS 'Contribution table, compositions reference
 CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON ehr.contribution
 FOR EACH ROW EXECUTE PROCEDURE ehr.versioning('sys_period', 'ehr.contribution_history', true);
 
-create table ehr.composition (
+CREATE TABLE ehr.composition (
     id UUID PRIMARY KEY DEFAULT ehr.uuid_generate_v4(),
     ehr_id UUID references ehr.ehr(id) ON DELETE CASCADE,
 --    version UUID references ehr.versioned(id),
@@ -226,7 +226,7 @@ COMMENT ON TABLE ehr.composition IS 'Composition table';
 CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON ehr.composition
 FOR EACH ROW EXECUTE PROCEDURE ehr.versioning('sys_period', 'ehr.composition_history', true);
 
-create table ehr.event_context (
+CREATE TABLE ehr.event_context (
   id UUID primary key DEFAULT ehr.uuid_generate_v4(),
   composition_id UUID references ehr.composition(id) ON DELETE CASCADE , -- belong to composition
   start_time TIMESTAMP not null,
@@ -243,7 +243,7 @@ create table ehr.event_context (
 );
 
 -- change history table
-create table ehr.event_context_history (like ehr.event_context);
+CREATE TABLE ehr.event_context_history (like ehr.event_context);
 CREATE INDEX ehr_event_context_history ON ehr.event_context_history USING BTREE (id);
 
 CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON ehr.event_context
@@ -251,7 +251,7 @@ FOR EACH ROW EXECUTE PROCEDURE ehr.versioning('sys_period', 'ehr.event_context_h
 
 COMMENT ON TABLE ehr.event_context IS 'defines the context of an event (time, who, where... see openEHR IM 5.2';
 
-create table ehr.participation (
+CREATE TABLE ehr.participation (
   id UUID primary key DEFAULT ehr.uuid_generate_v4(),
   event_context UUID NOT NULL REFERENCES ehr.event_context(id) ON DELETE CASCADE,
   performer UUID references ehr.party_identified(id),
@@ -264,7 +264,7 @@ create table ehr.participation (
 );
 
 -- change history table
-create table ehr.participation_history (like ehr.participation);
+CREATE TABLE ehr.participation_history (like ehr.participation);
 CREATE INDEX ehr_participation_history ON ehr.participation_history USING BTREE (id);
 
 CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON ehr.participation
@@ -272,9 +272,9 @@ FOR EACH ROW EXECUTE PROCEDURE ehr.versioning('sys_period', 'ehr.participation_h
 
 COMMENT ON TABLE ehr.participation IS 'define a participating party for an event f.ex.';
 
-create type ehr.entry_type as enum('section','care_entry', 'admin', 'proxy');
+CREATE TYPE ehr.entry_type as enum('section','care_entry', 'admin', 'proxy');
 
-create table ehr.entry (
+CREATE TABLE ehr.entry (
 	id UUID primary key DEFAULT ehr.uuid_generate_v4(),
 	composition_id UUID references ehr.composition(id) ON DELETE CASCADE , -- belong to composition
 	sequence int, -- ordering sequence number
@@ -298,7 +298,7 @@ CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON ehr.entry
 FOR EACH ROW EXECUTE PROCEDURE ehr.versioning('sys_period', 'ehr.entry_history', true);
 
 -- CONTAINMENT "pseudo" index for CONTAINS clause resolution
-create TABLE ehr.containment (
+CREATE TABLE ehr.containment (
   comp_id UUID,
   label ltree,
   path text
@@ -361,7 +361,7 @@ CREATE OR REPLACE VIEW ehr.comp_expand AS
 
 
 -- AUDIT TRAIL has been replaced by CONTRIBUTION
--- create table ehr.audit_trail (
+-- CREATE TABLE ehr.audit_trail (
 --     id UUID PRIMARY KEY DEFAULT ehr.uuid_generate_v4(),
 --     composition_id UUID references ehr.composition(id),
 --     committer UUID not null references ehr.party_identified(id), -- contributor
